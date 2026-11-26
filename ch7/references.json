@@ -1,0 +1,21 @@
+{
+  "chapter": "第 7 章 大语言模型训练概述",
+  "source": "教材《强化学习和多模态教程》第 7 章，原书 PDF p93–98",
+  "deck": "https://my.feishu.cn/slides/Hg13sTwqylQ5OJdahcncVvUFn7b",
+  "references": [
+    {"id": 1, "fact": "LLM 训练分为预训练、SFT、RLHF 三段，分别使用示例数据集、指令-回答对、人类反馈数据集", "sources": [{"source": "教材", "locator": "§7.1，图 7.1，p93", "evidence": "预训练大语言模型 → SFT → RLHF；示例数据集、人类反馈数据集、用户数据飞轮"}], "kind": "direct", "status": "教材原文"},
+    {"id": 2, "fact": "在 LLM 环境里策略是 LLM 本身，状态是上下文，动作是下一个 token，动作概率是在该上下文下选该 token 的概率", "sources": [{"source": "教材", "locator": "§7.1.1 末，p94", "evidence": "策略 πθ 是 LLM；状态 St 是字符串 abc；动作 At 为输出字符 d"}], "kind": "direct", "status": "教材原文"},
+    {"id": 3, "fact": "预训练目标函数是整段序列的条件概率连乘，即式 7.1", "sources": [{"source": "教材", "locator": "§7.1.1，式 7.1，p93", "evidence": "J(θ)=πθ(b|a)πθ(c|a,b)πθ(d|a,b,c)"}], "kind": "direct", "status": "教材原文，样本为教材原例 abcd"},
+    {"id": 4, "fact": "SFT 只在回答部分计算损失，目标函数为式 7.2", "sources": [{"source": "教材", "locator": "§7.1.2，式 7.2，p94", "evidence": "J(θ)=πθ(I|How are you?)×πθ(am|How are you? I)×…×πθ(<eos_token>|How are you? I am fine.)"}], "kind": "direct", "status": "教材原文"},
+    {"id": 5, "fact": "SFT 轮数多会过拟合微调数据并发生灾难性遗忘，因为目标函数中没有约束新旧模型偏差的 KL 项；SFT 一般不会训练很多轮", "sources": [{"source": "教材", "locator": "§7.1.2，p94", "evidence": "如果 SFT 训练的轮数很多，那么会过拟合监督微调数据。模型会发生灾难性遗忘，因为在目标函数中没有约束新旧模型的偏差（KL 散度）。SFT 一般不会训练很多轮！"}], "kind": "direct", "status": "教材原文"},
+    {"id": 6, "fact": "SFT 无法让大模型不输出我们不喜欢的回答，本质是拟合训练数据中的分布", "sources": [{"source": "教材", "locator": "§7.1.2 后 RLHF 一段，p95", "evidence": "SFT 的训练目标是预测下一个 token，它本质上是拟合训练数据中的分布。"}], "kind": "direct", "status": "教材原文"},
+    {"id": 7, "fact": "RLHF 的三条根本转变：优化人类偏好而非掌控环境、数据来自人类判断而非环境交互、在奖励最大化与贴近原始预训练行为之间取平衡", "sources": [{"source": "教材", "locator": "§7.1.2 RLHF 一段，p95", "evidence": "1. 优化以适应人类偏好而非掌控环境；2. 数据来自人类判断而非环境互动；3. 在奖励最大化与保持接近原始预训练行为之间取得平衡"}], "kind": "direct", "status": "教材原文（含教材转述 OpenAI 与 IBM 研究人员观点）"},
+    {"id": 8, "fact": "IBM 研究人员认为 RLHF 特别适合于目标复杂、定义不明确或难以指定的任务", "sources": [{"source": "教材转引 IBM 研究人员", "locator": "§7.1.2，p95", "evidence": "正如 IBM 研究人员指出的那样，RLHF 特别适合于目标复杂、定义不明确或难以指定的任务。"}], "kind": "direct", "status": "教材转引，非一手原文"},
+    {"id": 9, "fact": "PPO 目标函数为带裁剪的替代目标，通常限制新旧策略比值在 1±0.2 以内", "sources": [{"source": "教材", "locator": "§7.2.1，式 7.3，p96", "evidence": "JPPO(θ)=E[min(πθ/πθold·A, clip(πθ/πθold,1-ε,1+ε)·A)]；比值通常限制在 1±0.2 以内"}], "kind": "direct", "status": "教材原文；原始论文 Schulman et al. 2017"},
+    {"id": 10, "fact": "DPO 于 2023 年提出，利用奖励函数与最优策略的直接映射，把 RL 问题转化为偏好数据上的分类问题，不需要单独的奖励模型", "sources": [{"source": "教材", "locator": "§7.2.2，式 7.4，p96", "evidence": "DPO 于 2023 年在一篇题为《直接偏好优化：你的语言模型其实是一个奖励模型》的论文中首次提出，彻底消除了对单独奖励模型的需求"}], "kind": "direct", "status": "教材原文；原始论文 Rafailov et al. 2023"},
+    {"id": 11, "fact": "GRPO 由 DeepSeek 提出：去掉价值函数模型、按一组回答而非单个 token 评估、直接把 KL 散度纳入损失", "sources": [{"source": "教材", "locator": "§7.2.3，式 7.5–7.6，p96–97", "evidence": "GRPO 去掉了价值函数模型，减少内存开销；评估一组回答而不是单个 token；直接把 KL 散度纳入损失函数"}], "kind": "direct", "status": "教材原文；原始论文 Shao et al. 2024 (DeepSeekMath)"},
+    {"id": 12, "fact": "奖励模型是对人类偏好的拟合，策略会利用其漏洞，出现奖励上升而真实质量下降（奖励过优化）", "sources": [{"source": "Gao, Schulman, Hilton 2023, Scaling Laws for Reward Model Overoptimization", "locator": "摘要与实验结论", "evidence": "随优化强度增加，代理奖励持续上升而金标准奖励先升后降"}], "kind": "direct", "status": "独立文献，超出教材第 7 章原文，用于解释“奖励是学出来的”这一风险"},
+    {"id": 13, "fact": "后续章节起点：第 8 章 DPO p99，第 9 章 PPO 复刻 InstructGPT p125，第 10 章 GRPO 复刻 DeepSeek-R1 p147", "sources": [{"source": "教材目录与书签", "locator": "PDF 目录页与书签条目", "evidence": "8. 使用DPO微调大语言模型 99；9. 使用PPO微调大语言模型--复刻InstructGPT 125；10. 使用GRPO微调大语言模型——复刻DeepSeek-R1 147"}], "kind": "direct", "status": "教材目录"}
+  ],
+  "gaps": ["第 7 页第 03 条（整段重要性采样的方差随序列长度放大）为通识性陈述，教材第 7 章未展开推导；如需给数据需另补推导或引用 PPO / InstructGPT 实现细节。"]
+}

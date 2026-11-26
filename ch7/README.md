@@ -21,24 +21,19 @@
 | 页面 | 公式 | 教材位置 |
 | --- | --- | --- |
 | 第 3 页 | `J(θ)=π_θ(b|a)π_θ(c|a,b)π_θ(d|a,b,c)` | 式 7.1，p93 |
-| 第 4 页 | 回答部分若干条件概率连乘 | 式 7.2，p94 |
+| 第 4 页 | 回答部分条件概率连乘（教材按整句展开为 5 项） | 式 7.2，p94 |
 | 第 6 页 | PPO 裁剪目标 | 式 7.3，p96 |
 | 第 6 页 | DPO 偏好对目标 | 式 7.4，p96 |
 | 第 6 页 | GRPO 组相对目标与替代损失 | 式 7.5、7.6，p96–97 |
 
 ## 文件
 
-- `references.json`：正文与讲稿里的事实依据索引，编号对应 XML 里的 `<!-- citation: [n] -->` 注释。
-- `slides_xml.tar.gz.b64`：七页 XML 源码（含每页 `<note>` 讲稿）的 tar.gz + base64 打包，纯文本，可入库。解码命令：
-
-```bash
-base64 -d slides_xml.tar.gz.b64 > slides_xml.tar.gz
-mkdir -p src && tar xzf slides_xml.tar.gz -C src
-```
+- `references.json`：正文与讲稿里的事实依据索引，编号对应页面 XML 里的 `<!-- citation: [n] -->` 注释。
+- 页面 XML 源码（每页含 `<note>` 讲稿）在飞书 deck 与本地工作目录 `ch7/src/`，体积仅数十 KB。
 
 重建这份幻灯片：先 `lark-cli slides +create --title ...` 建空 deck，再逐页 `lark-cli slides +add-slide --no-lint --presentation <id> --slide @src/pN.xml`。
 
-导出的 PDF 与 PPTX 在飞书侧生成，体积大且当前执行环境的 GitHub 通道只能写文本文件，二进制暂未入库；在能 `git push` 的机器上可直接放入本目录。
+导出的 PDF（7 页，约 1.0 MB）与 PPTX（约 72 KB）在飞书侧生成。当前执行环境的 GitHub 通道只能写文本文件、二进制会损坏，因此未入库；在能 `git push` 的机器上可直接放入本目录。
 
 ## 与其他材料的关系
 
